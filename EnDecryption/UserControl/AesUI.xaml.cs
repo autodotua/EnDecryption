@@ -7,6 +7,7 @@ using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Windows.Foundation;
 using Windows.Foundation.Collections;
+using Windows.Storage.Pickers;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Controls.Primitives;
@@ -15,6 +16,10 @@ using Windows.UI.Xaml.Input;
 using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using static EnDecryption.Tools;
+using Windows.Storage;
+using Windows.Storage.Streams;
+using Windows.Security.Cryptography;
+using Windows.UI.Popups;
 
 //https://go.microsoft.com/fwlink/?LinkId=234236 上介绍了“用户控件”项模板
 
@@ -45,7 +50,7 @@ namespace EnDecryption
         {
             if (txtKey.Text == "" && txtIv.Text == "")
             {
-              await  GenerateKey();
+                await GenerateKey();
             }
 
             //if (txtSource.Text == "（已选择文件）" && file != null)
@@ -120,15 +125,97 @@ namespace EnDecryption
                 iv,
                 cipherMode,
                 paddingMode));
-            txtResult.Text = ToText(result,cbbDisplayMode);
+                txtResult.Text = ToText(result, cbbDisplayMode);
             }
             //}
         }
 
+        public async Task EncrypteFile()
+        {
+            if (currentFileContent == null)
+            {
+                throw new ArgumentNullException("文件为Null");
+            }
+            if (txtKey.Text == "" && txtIv.Text == "")
+            {
+                await GenerateKey();
+            }
+            if (Check(out byte[] key, out byte[] iv))
+            {
+                FileSavePicker picker = new FileSavePicker();
+                picker.FileTypeChoices.Add("AES加密文件", new List<string>() { ".aes" });
+                picker.FileTypeChoices.Add("二进制文件", new List<string>() { ".bin" });
+                picker.FileTypeChoices.Add("所有文件", new List<string>() { "." });
+                picker.SuggestedFileName = currentFile.Name.Replace(currentFile.FileType, "");
+
+                var file = await picker.PickSaveFileAsync();
+
+
+                byte[] result = null;
+                var cipherMode = CipherMode;
+                var paddingMode = PaddingMode;
+                await Task.Run(() =>
+               result = AesHelper.Encrypte(
+               currentFileContent,
+                key,
+                iv,
+                cipherMode,
+                paddingMode));
+
+                if (result.Length > 0)
+                {
+                    await Task.Run(() => FileIO.WriteBufferAsync(file, CryptographicBuffer.CreateFromByteArray(result)));
+                    currentFile = null;
+                    currentFileContent = null;
+                }
+            }
+        }
+        public async Task DecrypteFile()
+        {
+            if (currentFileContent == null)
+            {
+                throw new ArgumentNullException("文件为Null");
+            }
+            if (txtKey.Text == "")
+            {
+                ShowError("请输入密钥!");
+            }
+            if (Check(out byte[] key, out byte[] iv))
+            {
+                FileSavePicker picker = new FileSavePicker();
+                picker.FileTypeChoices.Add("请指定文件类型！", new List<string>() { "." });
+                picker.SuggestedFileName = currentFile.Name.Replace(currentFile.FileType, "");
+
+                var file = await picker.PickSaveFileAsync();
+
+
+                byte[] result = null;
+                var cipherMode = CipherMode;
+                var paddingMode = PaddingMode;
+                await Task.Run(() =>
+               result = AesHelper.Decrypte(
+               currentFileContent,
+                key,
+                iv,
+                cipherMode,
+                paddingMode));
+
+                if (result.Length > 0)
+                {
+                    await Task.Run(() => FileIO.WriteBufferAsync(file, CryptographicBuffer.CreateFromByteArray(result)));
+                    currentFile = null;
+                    currentFileContent = null;
+                }
+            }
+        }
 
 
         public async Task Decrypte()
         {
+            if (txtKey.Text == "")
+            {
+                ShowError("请输入密钥!");
+            }
 
             if (Check(txtResult.Text, out byte[] text, out byte[] key, out byte[] iv))
             {
@@ -148,10 +235,9 @@ namespace EnDecryption
         public async Task GenerateKey()
         {
             Aes aes = null;
-            ;
             await Task.Run(() =>
             {
-                 aes = Aes.Create();
+                aes = Aes.Create();
             });
             byte[] key = aes.Key;
             byte[] iv = aes.IV;
@@ -191,22 +277,15 @@ namespace EnDecryption
                 return false;
             }
 
-            try
-            {
-                value = Convert.FromBase64String(text);
-            }
-            catch
-            {
-                value = CurrentEncoding.GetBytes(text);
-            }
+            value = GetBytes(text);
 
-            key = ConvertToBytes(txtKey.Text,cbbInputMode);
+            key = GetBytes(txtKey.Text, cbbInputMode);
             if (key == null || (key.Length != 16 && key.Length != 24 && key.Length != 32))
             {
                 ShowError("密钥不合法：转换后应为16、24或32个8位数字");
                 return false;
             }
-            iv = ConvertToBytes(txtIv.Text, cbbInputMode);
+            iv = GetBytes(txtIv.Text, cbbInputMode);
             if ((iv == null || iv.Length != 16) && CipherMode != CipherMode.ECB)
             {
                 ShowError("初始向量不合法：转换后应为16个8位数字");
@@ -214,7 +293,24 @@ namespace EnDecryption
             }
             return true;
         }
+        private bool Check(out byte[] key, out byte[] iv)
+        {
+            key = iv = null;
 
+            key = GetBytes(txtKey.Text, cbbInputMode);
+            if (key == null || (key.Length != 16 && key.Length != 24 && key.Length != 32))
+            {
+                ShowError("密钥不合法：转换后应为16、24或32个8位数字");
+                return false;
+            }
+            iv = GetBytes(txtIv.Text, cbbInputMode);
+            if ((iv == null || iv.Length != 16) && CipherMode != CipherMode.ECB)
+            {
+                ShowError("初始向量不合法：转换后应为16个8位数字");
+                return false;
+            }
+            return true;
+        }
         private CipherMode CipherMode
         {
             get
@@ -260,6 +356,21 @@ namespace EnDecryption
             }
         }
 
+        public async void SaveSourceAsFile()
+        {
+            await PickAndSaveFile(CurrentEncoding.GetBytes(TxtSource.Text), new Dictionary<string, string>() { { "文本文件", ".txt" } }, true);
+        }
+
+        public async void SaveResultAsFile()
+        {
+            MessageDialog dialog = new MessageDialog("保存", "请选择要保存的格式");
+            dialog.Commands.Add(new UICommand("二进制", async (p1) =>
+            await PickAndSaveFile(GetBytes(txtResult.Text, cbbDisplayMode), new Dictionary<string, string>() { { "AES加密文件", ".aes" }, { "二进制文件", ".bin" } }, true)));
+            dialog.Commands.Add(new UICommand("显示的文本", async (p1) =>
+            await PickAndSaveFile(CurrentEncoding.GetBytes(txtResult.Text), new Dictionary<string, string>() { { "文本文件", ".txt" } }, true)));
+            await dialog.ShowAsync();
+        }
+
         public int SeparatorIndex => cbbSeparator.SelectedIndex;
 
         public int DisplayModeIndex => cbbDisplayMode.SelectedIndex;
@@ -267,8 +378,8 @@ namespace EnDecryption
 
         public int EncodingIndex => cbbEncoding.SelectedIndex;
 
-        public TextBox TxtSource => TxtSource;
-        public TextBox TxtResult => TxtResult;
-        
+        public TextBox TxtSource => txtSource;
+        public TextBox TxtResult => txtResult;
+
     }
 }

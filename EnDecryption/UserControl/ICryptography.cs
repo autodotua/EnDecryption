@@ -18,6 +18,11 @@ namespace EnDecryption
         Task Encrypte();
         Task Decrypte();
 
+        Task EncrypteFile();
+        Task DecrypteFile();
+
         Task GenerateKey();
+        void SaveSourceAsFile();
+        void SaveResultAsFile();
     }
 }

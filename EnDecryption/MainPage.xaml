@@ -28,13 +28,13 @@
             <CommandBar.Content>
                 <AppBarButton Icon="Setting" />
             </CommandBar.Content>
-            <AppBarButton Icon="Permissions" Label="生成密钥" HorizontalAlignment="Right" Click="AppBarButton_Click_1"/>
+            <AppBarButton x:Name="btnGenerateKey" Icon="Permissions" Label="生成密钥" HorizontalAlignment="Right" Click="BtnGenerateKeyClickEventHandler"/>
             <AppBarButton Icon="Copy" Label="复制结果" HorizontalAlignment="Right" Click="BtnCopyClickEventHandler"/>
             <AppBarSeparator/>
             <AppBarButton Icon="OpenFile" Label="打开文件" HorizontalAlignment="Right" Click="BtnOpenFileClickEventHandler"/>
-            <AppBarButton Icon="Save" Label="保存为文件" HorizontalAlignment="Right" Click="BtnOpenFileClickEventHandler"/>
+            <AppBarButton Icon="Save" Label="保存为文件" HorizontalAlignment="Right" Click="AppBarButton_Click_1"/>
             <AppBarSeparator/>
-            <AppBarButton Icon="Redo" Label="解密" HorizontalAlignment="Right" Click="BtnDecrypteClickEventHandler"/>
+            <AppBarButton x:Name="BtnDecrypte" Icon="Redo" Label="解密" HorizontalAlignment="Right" Click="BtnDecrypteClickEventHandler"/>
             <AppBarButton Icon="Send" Label="加密" HorizontalAlignment="Right" Click="BtnEncrypteClickEventHandler"/>
         </CommandBar>
 
@@ -44,6 +44,9 @@
             </PivotItem>
             <PivotItem Header="RSA">
                 <local:RsaUI x:Name="ucRsa"/>
+            </PivotItem>
+            <PivotItem Header="消息摘要">
+                <local:MessageDigestUI x:Name="ucMD"/>
             </PivotItem>
         </Pivot>
         <ProgressRing x:Name="prgLoading" Width="96" Height="96" Grid.RowSpan="3" Grid.Column="3"/>

@@ -4,6 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Windows.Data.Xml.Dom;
+using Windows.Security.Cryptography;
+using Windows.Storage;
+using Windows.Storage.Pickers;
 using Windows.UI.Notifications;
 using Windows.UI.Popups;
 using Windows.UI.Xaml;
@@ -17,7 +20,7 @@ namespace EnDecryption
         {
             get
             {
-                switch (currentInterface.EncodingIndex)
+                switch (currentPivot.EncodingIndex)
                 {
                     case 0:
                         return Encoding.Default;
@@ -42,7 +45,7 @@ namespace EnDecryption
         }
         public static async void ShowError(string text)
         {
-            await mainWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await mainPage.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 MessageDialog dialog = new MessageDialog(text);
                 await dialog.ShowAsync();
@@ -50,7 +53,7 @@ namespace EnDecryption
         }
         public static async void ShowError(string text, string title)
         {
-            await mainWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await mainPage.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
             {
                 MessageDialog dialog = new MessageDialog(Environment.NewLine + text, title);
                 await dialog.ShowAsync();
@@ -58,14 +61,14 @@ namespace EnDecryption
         }
         public static async void ShowError(string text, string title, Exception ex)
         {
-            await mainWindow.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
+            await mainPage.Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, async () =>
              {
                  MessageDialog dialog = new MessageDialog(Environment.NewLine + text + Environment.NewLine + Environment.NewLine + ex.ToString(), title);
                  await dialog.ShowAsync();
              });
         }
 
-        public static byte[] ConvertToBytes(string text, ComboBox judegBy)
+        public static byte[] GetBytes(string text, ComboBox judegBy)
         {
             try
             {
@@ -76,9 +79,9 @@ namespace EnDecryption
                     case "Base64字符串":
                         return Convert.FromBase64String(text);
                     case "十进制Byte":
-                        return GetByteArrayFromDec(text);
+                        return GetBytesFromDec(text);
                     case "十六进制Byte":
-                        return GetByteArrayFromHex(text);
+                        return GetBytesFromHex(text);
                     default:
                         return null;
                 }
@@ -90,8 +93,20 @@ namespace EnDecryption
 
         }
 
+        public static byte[] GetBytes(string text)
+        {
+            try
+            {
+                return  Convert.FromBase64String(text);
+            }
+            catch
+            {
+                return  CurrentEncoding.GetBytes(text);
+            }
+        }
 
-        public static byte[] GetByteArrayFromDec(string text)
+
+        public static byte[] GetBytesFromDec(string text)
         {
             try
             {
@@ -107,7 +122,7 @@ namespace EnDecryption
                 return null;
             }
         }
-        public static byte[] GetByteArrayFromHex(string text)
+        public static byte[] GetBytesFromHex(string text)
         {
             try
             {
@@ -158,14 +173,12 @@ namespace EnDecryption
             }
 
         }
-
-        public static ICryptography currentInterface;
-
+        
         public static string Separator
         {
             get
             {
-                switch (currentInterface.SeparatorIndex)
+                switch (currentPivot.SeparatorIndex)
                 {
                     case 0:
                         return ",";
@@ -189,6 +202,42 @@ namespace EnDecryption
             notify.Show();
         }
 
-        public static Page mainWindow;
+        public static async Task PickAndSaveFile(byte[] data,IDictionary<string,string> filter,bool AllFileType,string sugguestedName=null)
+        {
+            if(data==null || (filter==null && !AllFileType))
+            {
+                throw new ArgumentNullException();
+            }
+            if(filter.Count==0 && !AllFileType)
+            {
+                throw new Exception("筛选器内容为空");
+            }
+            FileSavePicker picker = new FileSavePicker();
+            if (filter != null && filter.Count > 0)
+            {
+                foreach (var i in filter)
+                {
+                    picker.FileTypeChoices.Add(i.Key, new List<string>() { i.Value });
+                }
+            }
+            if(AllFileType)
+            {
+                picker.FileTypeChoices.Add("所有文件", new List<string>() { "."});
+            }
+
+            if (sugguestedName != null)
+            {
+                picker.SuggestedFileName = sugguestedName;
+            }
+
+            var file = await picker.PickSaveFileAsync();
+            await Task.Run(() => FileIO.WriteBufferAsync(file, CryptographicBuffer.CreateFromByteArray(data)));
+
+        }
+
+        public static ICryptography currentPivot;
+        public static Page mainPage;
+        public static byte[] currentFileContent = null;
+        public static StorageFile currentFile = null;
     }
 }

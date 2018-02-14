@@ -1,0 +1,76 @@
+﻿<UserControl
+    x:Class="EnDecryption.MessageDigestUI"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:EnDecryption"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="txtSource" Header="明文"  AcceptsReturn="True"  TextWrapping="Wrap"/>
+
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" Padding="0,0,0,24">
+            <StackPanel Orientation="Horizontal">
+
+
+                <ComboBox x:Name="cbbEncoding" Header="编码类型" Grid.Row="2" SelectedIndex="0">
+                    <ComboBoxItem>默认</ComboBoxItem>
+                    <ComboBoxItem>UTF8</ComboBoxItem>
+                    <ComboBoxItem>ASCII</ComboBoxItem>
+                    <ComboBoxItem>Unicode</ComboBoxItem>
+                    <ComboBoxItem>UTF32</ComboBoxItem>
+                    <ComboBoxItem>UTF7</ComboBoxItem>
+                    <ComboBoxItem>BigEndianUnicode</ComboBoxItem>
+                    <ComboBoxItem>GB2312</ComboBoxItem>
+                </ComboBox>
+            </StackPanel>
+        </ScrollViewer>
+
+
+        <Grid Grid.Row="4">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="8"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+
+            </Grid.ColumnDefinitions>
+            <ToggleSwitch x:Name="switchMd5" OnContent="MD5" OffContent="MD5" IsOn="True" MinWidth="0"/>
+            <TextBox x:Name="txtMd5" Grid.Column="3"  IsReadOnly="True" VerticalContentAlignment="Center"/>
+            <ToggleSwitch x:Name="switchSha1" OnContent="SHA1" Grid.Row="2" IsOn="True" OffContent="SHA1"  MinWidth="0"/>
+            <TextBox x:Name="txtSha1" Grid.Row="2" Grid.Column="3"   IsReadOnly="True" VerticalContentAlignment="Center"/>
+            <ToggleSwitch x:Name="switchSha256" OnContent="SHA256" Grid.Row="4" IsOn="True" OffContent="SHA256"  MinWidth="0"/>
+            <TextBox x:Name="txtSha256" Grid.Row="4" Grid.Column="3"  IsReadOnly="True" VerticalContentAlignment="Center" />
+            <ToggleSwitch x:Name="switchSha384" OnContent="SHA384" Grid.Row="6" IsOn="True" OffContent="SHA384" MinWidth="0"/>
+            <TextBox x:Name="txtSha384" Grid.Row="6" Grid.Column="3"  IsReadOnly="True" VerticalContentAlignment="Center" />
+            <ToggleSwitch x:Name="switchSha512" OnContent="SHA512" Grid.Row="8" IsOn="True" OffContent="SHA512"  MinWidth="0"/>
+            <TextBox x:Name="txtSha512" Grid.Row="8" Grid.Column="3"   IsReadOnly="True" VerticalContentAlignment="Center"/>
+            <ToggleSwitch x:Name="switchCrc32" OnContent="CRC32" Grid.Row="10" IsOn="True" OffContent="CRC32"  MinWidth="0"/>
+            <TextBox x:Name="txtCrc32" Grid.Row="10" Grid.Column="3"   IsReadOnly="True" VerticalContentAlignment="Center"/>
+
+        </Grid>
+    </Grid>
+
+</UserControl>

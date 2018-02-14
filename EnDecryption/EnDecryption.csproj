@@ -92,7 +92,11 @@
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Cryptography\MessageDigestHelper.cs" />
     <Compile Include="Cryptography\RsaHelper.cs" />
+    <Compile Include="UserControl\MessageDigestUI.xaml.cs">
+      <DependentUpon>MessageDigestUI.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControl\NotifyPopup.xaml.cs">
       <DependentUpon>NotifyPopup.xaml</DependentUpon>
     </Compile>
@@ -174,6 +178,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="UserControl\MessageDigestUI.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="UserControl\NotifyPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
