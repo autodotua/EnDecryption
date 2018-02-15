@@ -16,32 +16,32 @@ namespace EnDecryption
 {
     public static class Tools
     {
-        public static Encoding CurrentEncoding
+        public static Encoding CurrentEncoding 
         {
             get
             {
-                switch (currentPivot.EncodingIndex)
+                switch (currentPivot.Encoding)
                 {
-                    case 0:
+                    case "默认":
                         return Encoding.Default;
-                    case 1:
-                        return Encoding.UTF8;
-                    case 2:
+                    case "UTF8":
+                        return new UTF8Encoding(false);
+                    case "ASCII":
                         return Encoding.ASCII;
-                    case 3:
+                    case "Unicode":
                         return Encoding.Unicode;
-                    case 4:
+                    case "UTF32":
                         return Encoding.UTF32;
-                    case 5:
+                    case "UTF7":
                         return Encoding.UTF7;
-                    case 6:
+                    case "BigEndianUnicode":
                         return Encoding.BigEndianUnicode;
-                    case 7:
+                    case "GB2312":
                         return Encoding.GetEncoding("GB2312");
                     default:
                         return Encoding.UTF8;
                 }
-            }
+}
         }
         public static async void ShowError(string text)
         {
@@ -68,29 +68,33 @@ namespace EnDecryption
              });
         }
 
-        public static byte[] GetBytes(string text, ComboBox judegBy)
+        public static byte[] GetBytesFromBinaryString(string text, ComboBox judgeBy)
+        {
+            return GetBytesFromBinaryString(text, GetComboBoxSelectedItemString(judgeBy));
+        }
+
+        public static byte[] GetBytesFromBinaryString(string text,string judgeBy)
         {
             try
+            { 
+            switch (judgeBy)
             {
-                switch ((judegBy.SelectedItem as ComboBoxItem).Content as string)
-                {
-                    case "字符串":
-                        return CurrentEncoding.GetBytes(text);
-                    case "Base64字符串":
-                        return Convert.FromBase64String(text);
-                    case "十进制Byte":
-                        return GetBytesFromDec(text);
-                    case "十六进制Byte":
-                        return GetBytesFromHex(text);
-                    default:
-                        return null;
-                }
+                case "字符串":
+                    return CurrentEncoding.GetBytes(text);
+                case "Base64字符串":
+                    return Convert.FromBase64String(text);
+                case "十进制Byte":
+                    return GetBytesFromDec(text);
+                case "十六进制Byte":
+                    return GetBytesFromHex(text);
+                default:
+                    return null;
             }
+        }
             catch
             {
                 return null;
             }
-
         }
 
         public static byte[] GetBytes(string text)
@@ -158,37 +162,42 @@ namespace EnDecryption
             return str.ToString().TrimEnd(Separator.ToCharArray()).ToUpper();
         }
 
-        public static string ToText(byte[] bytes, ComboBox judegBy)
+        public static string GetBinaryString(byte[] bytes, ComboBox judgeBy)
         {
-            switch (judegBy.SelectedIndex)
+           return GetBinaryString(bytes, GetComboBoxSelectedItemString(judgeBy));
+
+        }
+        public static string GetBinaryString(byte[] bytes, string judegBy)
+        {
+            switch (judegBy)
             {
-                case 0:
+                case "Base64字符串":
                     return Convert.ToBase64String(bytes);
-                case 1:
+                case "十进制Byte":
                     return ToDec(bytes);
-                case 2:
+                case "十六进制Byte":
                     return ToHex(bytes);
                 default:
                     return "";
             }
 
         }
-        
+
         public static string Separator
         {
             get
             {
-                switch (currentPivot.SeparatorIndex)
+                switch (currentPivot.Separator)
                 {
-                    case 0:
+                    case ",":
                         return ",";
-                    case 1:
+                    case ".":
                         return ".";
-                    case 2:
+                    case "（制表符）":
                         return "\t";
-                    case 3:
+                    case "（空格）":
                         return " ";
-                    case 4:
+                    case "（换行）":
                         return Environment.NewLine;
                     default:
                         return ",";
@@ -239,5 +248,46 @@ namespace EnDecryption
         public static Page mainPage;
         public static byte[] currentFileContent = null;
         public static StorageFile currentFile = null;
+
+        public static string GetComboBoxSelectedItemString(ComboBox cbb)
+        {
+           return (cbb.SelectedItem as ComboBoxItem).Content as string;
+        }
+
+        public static ApplicationDataContainer settings;
+
+   
+        public static T GetSettings<T>(string name, T defautValue)
+        {
+
+            if (!settings.Values.ContainsKey(name))
+            {
+                return defautValue;
+            }
+            else
+            {
+                return (T)settings.Values[name];
+            }
+        }
+        public static void EnsureSettings<T>(string name, T defautValue)
+        {
+
+            if (!settings.Values.ContainsKey(name))
+            {
+                SetSettings(name, defautValue);
+            }
+        }
+        public static T GetSettings<T>(string name)
+        {
+                return (T)settings.Values[name];
+        }
+
+        public static void SetSettings<T>(string name, T value)
+        {
+            settings.Values[name] = value;
+        }
+        public static ResourceDictionary resource=new ResourceDictionary();
+
+
     }
 }

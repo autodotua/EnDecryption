@@ -16,8 +16,8 @@
             <RowDefinition Height="8"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
-        <TextBox x:Name="txtSource" Header="明文"  AcceptsReturn="True"  TextWrapping="Wrap"/>
-        <TextBox x:Name="txtResult" Header="密文" Grid.Row="6"  AcceptsReturn="True"  TextWrapping="Wrap"/>
+        <TextBox x:Name="txtSource" Header="明文"  AcceptsReturn="True" TextWrapping="Wrap"/>
+        <TextBox x:Name="txtResult" Header="密文" Grid.Row="6"  AcceptsReturn="True" TextWrapping="Wrap"/>
 
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
@@ -25,7 +25,7 @@
                 <ColumnDefinition Width="8"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <TextBox x:Name="txtKey"  Header="密钥" AcceptsReturn="True"  TextWrapping="Wrap" MaxHeight="96"/>
+            <TextBox x:Name="txtKey"  Header="密钥" AcceptsReturn="True" TextWrapping="Wrap" MaxHeight="96"/>
             <TextBox x:Name="txtIv" Grid.Column="2"  Header="初始向量" AcceptsReturn="True"  TextWrapping="Wrap" MaxHeight="96"/>
 
         </Grid>

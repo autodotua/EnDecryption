@@ -9,8 +9,9 @@ namespace EnDecryption
 {
     public interface ICryptography
     {
-        int SeparatorIndex { get; }
-        int EncodingIndex { get; }
+        string Separator { get; }
+        string Encoding { get; }
+        string DisplayMode { get; }
 
         TextBox TxtSource { get;  }
         TextBox TxtResult { get;  }
@@ -24,5 +25,7 @@ namespace EnDecryption
         Task GenerateKey();
         void SaveSourceAsFile();
         void SaveResultAsFile();
+
+        void RefreshUISettings();
     }
 }

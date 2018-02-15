@@ -100,6 +100,9 @@
     <Compile Include="UserControl\NotifyPopup.xaml.cs">
       <DependentUpon>NotifyPopup.xaml</DependentUpon>
     </Compile>
+    <Compile Include="UserControl\BinaryToTextUI.xaml.cs">
+      <DependentUpon>BinaryToTextUI.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControl\RsaUI.xaml.cs">
       <DependentUpon>RsaUI.xaml</DependentUpon>
     </Compile>
@@ -185,6 +188,10 @@
     <Page Include="UserControl\NotifyPopup.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UserControl\BinaryToTextUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="UserControl\RsaUI.xaml">
       <Generator>MSBuild:Compile</Generator>

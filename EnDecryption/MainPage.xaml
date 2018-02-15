@@ -5,6 +5,8 @@
     xmlns:local="using:EnDecryption"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    AllowDrop="True"
+   
     mc:Ignorable="d">
     <Page.Resources>
         <Style TargetType="ComboBox">
@@ -25,14 +27,11 @@
 
 
         <CommandBar Grid.ColumnSpan="3" Grid.Row="2">
-            <CommandBar.Content>
-                <AppBarButton Icon="Setting" />
-            </CommandBar.Content>
             <AppBarButton x:Name="btnGenerateKey" Icon="Permissions" Label="生成密钥" HorizontalAlignment="Right" Click="BtnGenerateKeyClickEventHandler"/>
             <AppBarButton Icon="Copy" Label="复制结果" HorizontalAlignment="Right" Click="BtnCopyClickEventHandler"/>
             <AppBarSeparator/>
             <AppBarButton Icon="OpenFile" Label="打开文件" HorizontalAlignment="Right" Click="BtnOpenFileClickEventHandler"/>
-            <AppBarButton Icon="Save" Label="保存为文件" HorizontalAlignment="Right" Click="AppBarButton_Click_1"/>
+            <AppBarButton Icon="Save" Label="保存为文件" HorizontalAlignment="Right" Click="BtnSaveAsFileClickEventHandler"/>
             <AppBarSeparator/>
             <AppBarButton x:Name="BtnDecrypte" Icon="Redo" Label="解密" HorizontalAlignment="Right" Click="BtnDecrypteClickEventHandler"/>
             <AppBarButton Icon="Send" Label="加密" HorizontalAlignment="Right" Click="BtnEncrypteClickEventHandler"/>
@@ -47,6 +46,16 @@
             </PivotItem>
             <PivotItem Header="消息摘要">
                 <local:MessageDigestUI x:Name="ucMD"/>
+            </PivotItem>
+            <PivotItem Header="数据表示">
+                <local:BinaryToTextUI x:Name="ucBTT"/>
+            </PivotItem>
+            <PivotItem Header="设置">
+                <ScrollViewer>
+                    <StackPanel>
+                        <ToggleSwitch x:Name="switchWrapping" Header="自动换行" OnContent="" OffContent="" Toggled="switchWrapping_Toggled"  />
+                    </StackPanel>
+                </ScrollViewer>
             </PivotItem>
         </Pivot>
         <ProgressRing x:Name="prgLoading" Width="96" Height="96" Grid.RowSpan="3" Grid.Column="3"/>

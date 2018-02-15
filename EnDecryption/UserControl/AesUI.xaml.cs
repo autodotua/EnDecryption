@@ -125,7 +125,7 @@ namespace EnDecryption
                 iv,
                 cipherMode,
                 paddingMode));
-                txtResult.Text = ToText(result, cbbDisplayMode);
+                txtResult.Text = GetBinaryString(result, cbbDisplayMode);
             }
             //}
         }
@@ -279,13 +279,13 @@ namespace EnDecryption
 
             value = GetBytes(text);
 
-            key = GetBytes(txtKey.Text, cbbInputMode);
+            key = GetBytesFromBinaryString(txtKey.Text, cbbInputMode);
             if (key == null || (key.Length != 16 && key.Length != 24 && key.Length != 32))
             {
                 ShowError("密钥不合法：转换后应为16、24或32个8位数字");
                 return false;
             }
-            iv = GetBytes(txtIv.Text, cbbInputMode);
+            iv = GetBytesFromBinaryString(txtIv.Text, cbbInputMode);
             if ((iv == null || iv.Length != 16) && CipherMode != CipherMode.ECB)
             {
                 ShowError("初始向量不合法：转换后应为16个8位数字");
@@ -297,13 +297,13 @@ namespace EnDecryption
         {
             key = iv = null;
 
-            key = GetBytes(txtKey.Text, cbbInputMode);
+            key = GetBytesFromBinaryString(txtKey.Text, cbbInputMode);
             if (key == null || (key.Length != 16 && key.Length != 24 && key.Length != 32))
             {
                 ShowError("密钥不合法：转换后应为16、24或32个8位数字");
                 return false;
             }
-            iv = GetBytes(txtIv.Text, cbbInputMode);
+            iv = GetBytesFromBinaryString(txtIv.Text, cbbInputMode);
             if ((iv == null || iv.Length != 16) && CipherMode != CipherMode.ECB)
             {
                 ShowError("初始向量不合法：转换后应为16个8位数字");
@@ -365,18 +365,22 @@ namespace EnDecryption
         {
             MessageDialog dialog = new MessageDialog("保存", "请选择要保存的格式");
             dialog.Commands.Add(new UICommand("二进制", async (p1) =>
-            await PickAndSaveFile(GetBytes(txtResult.Text, cbbDisplayMode), new Dictionary<string, string>() { { "AES加密文件", ".aes" }, { "二进制文件", ".bin" } }, true)));
+            await PickAndSaveFile(GetBytesFromBinaryString(txtResult.Text, cbbDisplayMode), new Dictionary<string, string>() { { "AES加密文件", ".aes" }, { "二进制文件", ".bin" } }, true)));
             dialog.Commands.Add(new UICommand("显示的文本", async (p1) =>
             await PickAndSaveFile(CurrentEncoding.GetBytes(txtResult.Text), new Dictionary<string, string>() { { "文本文件", ".txt" } }, true)));
             await dialog.ShowAsync();
         }
 
-        public int SeparatorIndex => cbbSeparator.SelectedIndex;
+        public void RefreshUISettings()
+        {
+            txtSource.TextWrapping = txtResult.TextWrapping = txtKey.TextWrapping = txtIv.TextWrapping = (TextWrapping)resource["TextWrapping"];
+        }
 
-        public int DisplayModeIndex => cbbDisplayMode.SelectedIndex;
-        public int InputModeIndex => cbbInputMode.SelectedIndex;
+        public string Separator => GetComboBoxSelectedItemString(cbbSeparator);
 
-        public int EncodingIndex => cbbEncoding.SelectedIndex;
+        public string DisplayMode => GetComboBoxSelectedItemString(cbbDisplayMode);
+
+        public string Encoding => GetComboBoxSelectedItemString(cbbEncoding);
 
         public TextBox TxtSource => txtSource;
         public TextBox TxtResult => txtResult;

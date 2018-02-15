@@ -126,12 +126,18 @@ namespace EnDecryption
 
             await PickAndSaveFile(CurrentEncoding.GetBytes(str.ToString()), new Dictionary<string, string>() { { "文本文件", ".txt" } }, true);
         }
+        public void RefreshUISettings()
+        {
+            txtSource.TextWrapping  = (TextWrapping)resource["TextWrapping"];
+        }
 
-
-        public int SeparatorIndex => -1;
-        public int EncodingIndex => cbbEncoding.SelectedIndex;
         public TextBox TxtSource => txtSource;
         public TextBox TxtResult => throw new NotImplementedException();
+
+        public string Separator => throw new NotImplementedException();
+        public string Encoding => GetComboBoxSelectedItemString(cbbEncoding);
+        public string DisplayMode => throw new NotImplementedException();
+
         public Task Decrypte() => throw new NotImplementedException();
         public Task GenerateKey() => throw new NotImplementedException();
         public Task DecrypteFile() => throw new NotImplementedException();

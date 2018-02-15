@@ -33,6 +33,8 @@ namespace EnDecryption
 
             this.InitializeComponent();
             this.Suspending += OnSuspending;
+            Tools.settings= Windows.Storage.ApplicationData.Current.LocalSettings;
+            //Tools.resource = Application.Current.Resources; 
         }
 
         /// <summary>
@@ -100,4 +102,6 @@ namespace EnDecryption
             deferral.Complete();
         }
     }
+
+
 }

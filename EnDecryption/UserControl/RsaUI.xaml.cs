@@ -76,7 +76,7 @@ namespace EnDecryption
                     key,
                     keyLength,
                     oaep));
-                txtResult.Text = ToText(result, cbbDisplayMode);
+                txtResult.Text = GetBinaryString(result, cbbDisplayMode);
             }
         }
 
@@ -117,7 +117,7 @@ namespace EnDecryption
                 return false;
             }
 
-            value = GetBytes(text, cbbDisplayMode);
+            value = GetBytesFromBinaryString(text, cbbDisplayMode);
 
             if (value == null)
             {
@@ -227,22 +227,23 @@ namespace EnDecryption
         {
             MessageDialog dialog = new MessageDialog("保存", "请选择要保存的格式");
             dialog.Commands.Add(new UICommand("二进制", async (p1) =>
-            await PickAndSaveFile(GetBytes(txtResult.Text, cbbDisplayMode), new Dictionary<string, string>() { { "RSA加密文件", ".rsa" }, { "二进制文件", ".bin" } }, true)));
+            await PickAndSaveFile(GetBytesFromBinaryString(txtResult.Text, cbbDisplayMode), new Dictionary<string, string>() { { "RSA加密文件", ".rsa" }, { "二进制文件", ".bin" } }, true)));
             dialog.Commands.Add(new UICommand("显示的文本", async (p1) =>
             await PickAndSaveFile(CurrentEncoding.GetBytes(txtResult.Text), new Dictionary<string, string>() { { "文本文件", ".txt" } }, true)));
             await dialog.ShowAsync();
         }
+        public void RefreshUISettings()
+        {
+            txtSource.TextWrapping = txtResult.TextWrapping = txtPrivateKey.TextWrapping = txtPublicKey.TextWrapping = (TextWrapping)resource["TextWrapping"];
+        }
 
-        public int SeparatorIndex => cbbSeparator.SelectedIndex;
+        public string Separator => (cbbSeparator.SelectedItem as ComboBoxItem).Content as string;
 
-        public int DisplayModeIndex => cbbDisplayMode.SelectedIndex;
-        public int InputModeIndex => -1;
-
-        public int EncodingIndex => cbbEncoding.SelectedIndex;
+        public string DisplayMode => (cbbDisplayMode.SelectedItem as ComboBoxItem).Content as string;
 
         public TextBox TxtSource => txtSource;
         public TextBox TxtResult => txtResult;
 
-
+        public string Encoding=> (cbbEncoding.SelectedItem as ComboBoxItem).Content as string;
     }
 }
