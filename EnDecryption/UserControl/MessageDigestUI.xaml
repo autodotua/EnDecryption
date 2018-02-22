@@ -17,7 +17,7 @@
         </Grid.RowDefinitions>
         <TextBox x:Name="txtSource" Header="明文"  AcceptsReturn="True"  TextWrapping="Wrap"/>
 
-        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto" Padding="0,0,0,24">
+        <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Auto"  VerticalScrollBarVisibility="Disabled" Padding="0,0,0,24">
             <StackPanel Orientation="Horizontal">
 
 

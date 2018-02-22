@@ -50,6 +50,10 @@
             <PivotItem Header="数据表示">
                 <local:BinaryToTextUI x:Name="ucBTT"/>
             </PivotItem>
+            <PivotItem Header="文字编码">
+                <local:TextEncodingUI x:Name="ucEncoding"/>
+            </PivotItem>
+            
             <PivotItem Header="设置">
                 <ScrollViewer>
                     <StackPanel>

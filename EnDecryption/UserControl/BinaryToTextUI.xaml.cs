@@ -72,7 +72,7 @@ namespace EnDecryption
         public async Task Decrypte()
         {
 
-            if (txtSource.Text == "")
+            if (txtResult.Text == "")
             {
                 ShowError("源文本为空！");
                 return;

@@ -29,7 +29,7 @@
             <TextBox x:Name="txtPrivateKey"  Header="私钥" Grid.Column="2" AcceptsReturn="True"  TextWrapping="Wrap" MaxHeight="96"/>
 
         </Grid>
-        <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Auto" Padding="0,0,0,24">
+        <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"  Padding="0,0,0,24">
             <StackPanel Orientation="Horizontal">
                 <ComboBox x:Name="cbbPadding" Header="填充模式" SelectedIndex="0" >
                     <ComboBoxItem>PKCS#1 v1.5</ComboBoxItem>

@@ -41,20 +41,25 @@ namespace EnDecryption
             InitializeSettings();
 
             InitializeEvents();
-            App.Current.EnteredBackground += Current_EnteredBackground;
+            Application.Current.EnteredBackground += Current_EnteredBackground;
         }
 
         private void Current_EnteredBackground(object sender, Windows.ApplicationModel.EnteredBackgroundEventArgs e)
         {
             SetSettings("TextWrapping", switchWrapping.IsOn);
+            SetSettings("Pivot", pivot.SelectedIndex);
         }
 
         private void InitializeSettings()
         {
+            pivot.SelectedIndex = GetSettings("Pivot", 0);
+            PivotSelectionChangedEventHandler(null, null);
            
             resource.Add("TextWrapping", (switchWrapping.IsOn = GetSettings("TextWrapping", true))?TextWrapping.Wrap:TextWrapping.NoWrap);
 
             RefreshUISettings();
+
+            currentPivot.TxtSource.Focus(FocusState.Programmatic);
         }
         private void InitializeEvents()
         {
@@ -332,7 +337,7 @@ namespace EnDecryption
         {
             BtnDecrypte.Visibility = Visibility.Visible;
             btnGenerateKey.Visibility = Visibility.Visible;
-
+            
             switch (pivot.SelectedIndex)
             {
                 case 0:
@@ -348,6 +353,10 @@ namespace EnDecryption
                     break;
                 case 3:
                     currentPivot = ucBTT;
+                    btnGenerateKey.Visibility = Visibility.Collapsed;
+                    break;
+                case 4:
+                    currentPivot = ucEncoding;
                     btnGenerateKey.Visibility = Visibility.Collapsed;
                     break;
             }

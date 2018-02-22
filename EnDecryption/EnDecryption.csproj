@@ -94,6 +94,9 @@
   <ItemGroup>
     <Compile Include="Cryptography\MessageDigestHelper.cs" />
     <Compile Include="Cryptography\RsaHelper.cs" />
+    <Compile Include="UserControl\TextEncodingUI.xaml.cs">
+      <DependentUpon>TextEncodingUI.xaml</DependentUpon>
+    </Compile>
     <Compile Include="UserControl\MessageDigestUI.xaml.cs">
       <DependentUpon>MessageDigestUI.xaml</DependentUpon>
     </Compile>
@@ -181,6 +184,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="UserControl\TextEncodingUI.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="UserControl\MessageDigestUI.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
