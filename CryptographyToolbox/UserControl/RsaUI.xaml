@@ -1,0 +1,53 @@
+﻿<UserControl
+    x:Class="CryptographyToolbox.RsaUI"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CryptographyToolbox"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+  mc:Ignorable="d">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <TextBox x:Name="txtSource" Header="明文" AcceptsReturn="True"  TextWrapping="Wrap"/>
+        <TextBox x:Name="txtResult" Header="密文" Grid.Row="6"  AcceptsReturn="True"  TextWrapping="Wrap"/>
+
+        <Grid Grid.Row="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="8"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <TextBox x:Name="txtPublicKey"  Header="公钥" AcceptsReturn="True"  TextWrapping="Wrap" MaxHeight="96"/>
+            <TextBox x:Name="txtPrivateKey"  Header="私钥" Grid.Column="2" AcceptsReturn="True"  TextWrapping="Wrap" MaxHeight="96"/>
+
+        </Grid>
+        <ScrollViewer Grid.Row="4" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled"  Padding="0,0,0,24">
+            <StackPanel Orientation="Horizontal">
+                <ComboBox x:Name="cbbPadding" Header="填充模式" SelectedIndex="0" >
+                    <ComboBoxItem>PKCS#1 v1.5</ComboBoxItem>
+                    <ComboBoxItem>OAEP</ComboBoxItem>
+                </ComboBox>
+
+                <ComboBox x:Name="cbbKeyLength" Header="密钥长度"  SelectedIndex="0" >
+                    <ComboBoxItem>1024</ComboBoxItem>
+                    <ComboBoxItem>2048</ComboBoxItem>
+                    <ComboBoxItem>4096</ComboBoxItem>
+                    <ComboBoxItem>8192</ComboBoxItem>
+                    <ComboBoxItem>16384</ComboBoxItem>
+
+                </ComboBox>
+
+            </StackPanel>
+        </ScrollViewer>
+
+
+    </Grid>
+</UserControl>

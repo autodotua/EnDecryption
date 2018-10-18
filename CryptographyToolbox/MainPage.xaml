@@ -1,0 +1,62 @@
+﻿<Page
+    x:Class="CryptographyToolbox.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:CryptographyToolbox"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    AllowDrop="True"
+   
+    mc:Ignorable="d">
+    <Page.Resources>
+        <Style TargetType="ComboBox">
+            <Setter Property="Margin" Value="0,0,12,0"/>
+        </Style>
+
+    </Page.Resources>
+
+
+
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+
+
+        <CommandBar x:Name="cmdBar" Grid.ColumnSpan="3" Grid.Row="2">
+            <AppBarButton x:Name="btnGenerateKey" Icon="Permissions" Label="生成密钥" HorizontalAlignment="Right" Click="BtnGenerateKeyClickEventHandler"/>
+            <AppBarButton Icon="Copy" Label="复制结果" HorizontalAlignment="Right" Click="BtnCopyClickEventHandler"/>
+            <AppBarSeparator/>
+            <AppBarButton x:Name="BtnDecrypte" Icon="Redo" Label="解密" HorizontalAlignment="Right" Click="BtnDecrypteClickEventHandler"/>
+            <AppBarButton Icon="Send" Label="加密" HorizontalAlignment="Right" Click="BtnEncrypteClickEventHandler"/>
+        </CommandBar>
+
+        <Pivot x:Name="pivot" SelectionChanged="PivotSelectionChangedEventHandler">
+            <PivotItem Header="AES">
+                <local:AesUI x:Name="ucAes"/>
+            </PivotItem>
+            <PivotItem Header="RSA">
+                <local:RsaUI x:Name="ucRsa"/>
+            </PivotItem>
+            <PivotItem Header="消息摘要">
+                <local:HashUI x:Name="ucMD"/>
+            </PivotItem>
+            <PivotItem Header="数据表示">
+                <local:BinaryToTextUI x:Name="ucBTT"/>
+            </PivotItem>
+            <PivotItem Header="文字编码">
+                <local:TextEncodingUI x:Name="ucEncoding"/>
+            </PivotItem>
+            
+            <PivotItem Header="设置">
+                <local:SettingPage/>
+            </PivotItem>
+        </Pivot>
+        <ProgressRing x:Name="prgLoading" Width="96" Height="96" Grid.RowSpan="3" Grid.Column="3"/>
+        <Grid x:Name="grdLoding" Grid.RowSpan="3" Grid.ColumnSpan="3" Visibility="Collapsed" Opacity="0.5" Background="{ThemeResource ApplicationPageBackgroundThemeBrush}"/>
+
+    </Grid>
+</Page>
